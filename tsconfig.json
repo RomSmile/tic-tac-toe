@@ -20,7 +20,9 @@
     "noEmit": true,
     "jsx": "react-jsx"
   },
-  "include": [
-    "src"
-  ]
+  "parserOptions": {
+    "project": ["./tsconfig.json"],
+    "exclude": [".eslintrc.js"]
+  },
+  "include": ["src", "public", "**/*.ts", "**/*.tsx"]
 }

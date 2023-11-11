@@ -32,7 +32,6 @@ module.exports = {
     'no-empty': 'error',
     'no-implicit-coercion': 'error',
     eqeqeq: 'error',
-    'no-console': 'error',
     'no-empty-function': ['error', { allow: ['constructors'] }],
     'react/no-unescaped-entities': 'error',
     'react/jsx-uses-react': 'error',
