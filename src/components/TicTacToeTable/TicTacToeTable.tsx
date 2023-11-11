@@ -1,8 +1,10 @@
-import React, { FC, useEffect, useState } from 'react';
-import { ModalBlock, Table, TableItem } from './styled';
-import { IScore, ITicTacToeTable, IWinnerTypes } from './types';
+import React, { FC, useEffect, useState, useMemo } from 'react';
+import { Table, TableItem } from './styled';
+import { IScore, ITicTacToeTable, ITimerInfo, IWinnerTypes } from './types';
 import { createFilledTable, findWinner } from './helpers';
 import TicTacToeHeader from '../TicTacToeHeader';
+import Timer from '../Timer';
+import OutputPlayersInfo from './Componets/OutputPlayersInfo';
 
 const TicTacToeTable: FC<ITicTacToeTable> = ({ rowAndColumnAmount, setTableSize }) => {
   const [currentPlayer, setCurrentPlayer] = useState<number>(1);
@@ -10,6 +12,10 @@ const TicTacToeTable: FC<ITicTacToeTable> = ({ rowAndColumnAmount, setTableSize 
   const [winner, setWinner] = useState<IWinnerTypes>(null);
   const [winnerInfo, setWinnerInfo] = useState<number[][] | null>(null);
   const [score, setScore] = useState<IScore>({
+    firstPlayer: 0,
+    secondPlayer: 0,
+  });
+  const [timerInfo, setTimerInfo] = useState<ITimerInfo>({
     firstPlayer: 0,
     secondPlayer: 0,
   });
@@ -55,6 +61,10 @@ const TicTacToeTable: FC<ITicTacToeTable> = ({ rowAndColumnAmount, setTableSize 
     setWinner(null);
     setCurrentPlayer(1);
     setWinnerInfo(null);
+    setTimerInfo({
+      firstPlayer: 0,
+      secondPlayer: 0,
+    });
   };
 
   useEffect(() => {
@@ -63,36 +73,58 @@ const TicTacToeTable: FC<ITicTacToeTable> = ({ rowAndColumnAmount, setTableSize 
     }
   }, [rowAndColumnAmount]);
 
-  const writeModalInfo = () => {
-    return winner === 0 ? "Draw!!! Lest's try again" : winner === 1 ? 'Player 1 winner!!!' : 'Player 2 winner';
-  };
+  const outputTable = useMemo(() => {
+    return table.map((array, firstIndex) => {
+      return array.map((value, secondIndex) => {
+        const isWinCoordinate =
+          winnerInfo !== null && winnerInfo.some((item) => item[0] === firstIndex && item[1] === secondIndex);
+        return (
+          <TableItem
+            key={`${firstIndex}_${secondIndex}`}
+            rowAndColumnAmount={rowAndColumnAmount}
+            onClick={() => {
+              makeMove(firstIndex, secondIndex);
+            }}
+            isWin={isWinCoordinate}
+          >
+            {value}
+          </TableItem>
+        );
+      });
+    });
+  }, [winnerInfo, winner, table, currentPlayer]);
 
   return (
     <>
-      <ModalBlock title="" open={winner !== null} onOk={() => setWinner(null)} onCancel={() => setWinner(null)}>
-        <p>{writeModalInfo()}</p>
-      </ModalBlock>
+      <OutputPlayersInfo winner={winner} setWinner={setWinner} timerInfo={timerInfo} />
       <TicTacToeHeader setTableSize={setTableSize} currentPlayer={currentPlayer} newGame={newGame} score={score} />
-      <Table rowAndColumnAmount={rowAndColumnAmount}>
-        {table.map((array, firstIndex) => {
-          return array.map((value, secondIndex) => {
-            const isWinCoordinate =
-              winnerInfo !== null && winnerInfo.some((item) => item[0] === firstIndex && item[1] === secondIndex);
-            return (
-              <TableItem
-                key={`${firstIndex}_${secondIndex}`}
-                rowAndColumnAmount={rowAndColumnAmount}
-                onClick={() => {
-                  makeMove(firstIndex, secondIndex);
-                }}
-                isWin={isWinCoordinate}
-              >
-                {value}
-              </TableItem>
-            );
-          });
-        })}
-      </Table>
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
+      >
+        {currentPlayer % 2 === 0 && winner === null && currentPlayer !== 1 && (
+          <Timer
+            playerType={2}
+            currentPlayer={currentPlayer}
+            setTimerInfo={setTimerInfo}
+            timerInfo={timerInfo}
+            winner={winner}
+          />
+        )}
+        <Table rowAndColumnAmount={rowAndColumnAmount}>{outputTable}</Table>
+        {currentPlayer % 2 === 1 && winner === null && currentPlayer !== 1 && (
+          <Timer
+            playerType={1}
+            currentPlayer={currentPlayer}
+            setTimerInfo={setTimerInfo}
+            timerInfo={timerInfo}
+            winner={winner}
+          />
+        )}
+      </div>
     </>
   );
 };

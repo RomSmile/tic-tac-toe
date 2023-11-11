@@ -25,12 +25,6 @@ export const TableItem = styled.div<ITableItem>`
   ${({ isWin }) => isWin && 'color: red;'}
 `;
 
-export const ModalBlock = styled(Modal)`
-  & button:nth-of-type {
-    display: none;
-  }
-`;
-
 export const Score = styled.div`
   display: flex;
   justify-content: space-between;
@@ -43,4 +37,10 @@ export const FormWrapper = styled.div`
   align-items: center;
   gap: 10px;
   justify-content: center;
+`;
+
+export const ModalBlock = styled(Modal)`
+  & button:nth-of-type {
+    display: none;
+  }
 `;

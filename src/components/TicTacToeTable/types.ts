@@ -21,3 +21,5 @@ export interface IScore {
   firstPlayer: number;
   secondPlayer: number;
 }
+
+export interface ITimerInfo extends IScore {}
