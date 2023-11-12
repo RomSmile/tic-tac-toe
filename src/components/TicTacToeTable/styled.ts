@@ -40,7 +40,7 @@ export const FormWrapper = styled.div`
 `;
 
 export const ModalBlock = styled(Modal)`
-  & button:nth-of-type {
+  & .ant-modal-footer button:nth-of-type(1) {
     display: none;
   }
 `;
