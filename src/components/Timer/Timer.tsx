@@ -12,8 +12,8 @@ const Timer: FC<ITimer> = ({ playerType, timerInfo, setTimerInfo, currentPlayer,
       setTimerInfo((currentTimer) => ({
         ...currentTimer,
         ...(playerType === 1
-          ? { firstPlayer: currentTimer.firstPlayer + 0.1 }
-          : { secondPlayer: currentTimer.secondPlayer + 0.1 }),
+          ? { firstPlayer: currentTimer.firstPlayer + 0.16 }
+          : { secondPlayer: currentTimer.secondPlayer + 0.16 }),
       }));
     }, 100);
 
